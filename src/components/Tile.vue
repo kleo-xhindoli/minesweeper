@@ -1,0 +1,46 @@
+<template>
+  <div class="tile" >{{ getDisplay(tile) }}</div>
+</template>
+
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { Tile } from "@/types";
+
+@Component
+export default class TileComponent extends Vue {
+  @Prop() private tile!: Tile;
+  @Prop() private x!: number;
+  @Prop() private y!: number;
+  @Prop() private w!: number;
+  @Prop() private h!: number;
+
+  getDisplay(tile: Tile) {
+    if (tile.type === "TYPE_BOMB") return "*";
+    if (tile.type === "TYPE_NUMBER") return tile.value;
+    return " ";
+  }
+
+  get borderStyle() {
+    const { x, y, w, h } = this;
+    let style: any = {};
+    if (x === 0) style.borderLeft = "8px solid black";
+    if (x === w - 1) style.borderRight = "8px solid black";
+    if (y === 0) style.borderTop = "8px solid black";
+    if (y === h - 1) style.borderBottom = "8px solid black";
+
+    return style;
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+.tile {
+  width: 100%;
+  height: 100%;
+  font-size: 60px;
+  line-height: 80px;
+  text-align: center;
+  font-family: monospace;
+}
+</style>

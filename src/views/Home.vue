@@ -1,18 +1,33 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <Board :board="board" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import Board from "@/components/Board.vue";
+import { createBoard } from "@/services/GameService.ts";
 
 export default {
   name: "home",
+  data() {
+    return {
+      board: createBoard(7, 6, 3)
+    };
+  },
   components: {
-    HelloWorld
+    Board
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.home {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

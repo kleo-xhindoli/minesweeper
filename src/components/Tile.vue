@@ -1,5 +1,5 @@
 <template>
-  <div class="tile" >{{ getDisplay(tile) }}</div>
+  <div class="tile">{{ getDisplay(tile) }}</div>
 </template>
 
 <script lang="ts">

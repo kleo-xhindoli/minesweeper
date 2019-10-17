@@ -2,7 +2,7 @@
   <div class="board-grid">
     <div class="board-col" v-for="(col, x) in board.tiles" :key="x">
       <div class="board-tile" v-for="(tile, y) in col" :key="y">
-        <Tile :x="x" :y="y" :w="board.vTiles" :h="board.hTiles" :tile="tile" />
+        <Tile :x="x" :y="y" :tile="tile" />
       </div>
     </div>
   </div>
@@ -26,7 +26,6 @@ export default class BoardComponent extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .board-grid {
-  // position: relative;
   display: flex;
   border: 4px solid black;
 }
@@ -47,6 +46,5 @@ export default class BoardComponent extends Vue {
   &:last-child {
     border-bottom: 0;
   }
-  // position: absolute;
 }
 </style>

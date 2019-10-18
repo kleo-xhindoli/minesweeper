@@ -29,16 +29,15 @@ describe("Unit | Store | Actions", () => {
       expect(commit.mock.calls.length).toBe(0);
     });
 
-    it(`will commit once revealTile with the same tile as its payload 
-      if the tile is a bomb`, () => {
+    it(`will dispatch the loseGame action with the selected tile`, () => {
       const bombTile = state.board.tiles[2][2];
       expect(bombTile.type === "TYPE_BOMB").toBe(true);
       actions.reveal(context, bombTile);
 
-      expect(dispatch.mock.calls.length).toBe(0);
-      expect(commit.mock.calls.length).toBe(1);
-      expect(commit.mock.calls[0][0]).toBe("revealTile");
-      expect(commit.mock.calls[0][1]).toBe(bombTile);
+      expect(dispatch.mock.calls.length).toBe(1);
+      expect(commit.mock.calls.length).toBe(0);
+      expect(dispatch.mock.calls[0][0]).toBe("loseGame");
+      expect(dispatch.mock.calls[0][1]).toBe(bombTile);
     });
 
     it(`will commit once revealTile with the same tile as its payload 
@@ -170,4 +169,23 @@ describe("Unit | Store | Actions", () => {
       expect(commit.mock.calls[0][1]).toMatchObject({ tile, flag: false });
     });
   });
+
+  describe("loseGame", () => {
+    it("will not commit/dispatch if the tile isnt a bomb", () => {
+      const tile = state.board.tiles[2][1];
+      expect(tile.type === 'TYPE_BOMB').toBe(false)
+
+      actions.loseGame(context, tile);
+      expect(commit.mock.calls.length).toBe(0);
+      expect(dispatch.mock.calls.length).toBe(0);
+    })
+    it("will commit revealTile on all the tiles", () => {
+      const tile = state.board.tiles[2][2];
+      expect(tile.type === 'TYPE_BOMB').toBe(true)
+
+      actions.loseGame(context, tile);
+      expect(commit.mock.calls.length).toBe(state.board.vTiles * state.board.hTiles);
+      expect(dispatch.mock.calls.length).toBe(0);
+    })
+  })
 });

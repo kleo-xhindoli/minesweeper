@@ -1,6 +1,10 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { createBoard, getAdjacentTiles } from "@/services/GameService";
+import {
+  createBoard,
+  getAdjacentTiles,
+  forEachTile
+} from "@/services/GameService";
 import { Tile, AppState, AppContext } from "@/types";
 
 Vue.use(Vuex);
@@ -24,8 +28,7 @@ export const actions = {
   reveal({ commit, dispatch, state }: AppContext, tile: Tile) {
     if (tile.revealed) return;
     if (tile.type === "TYPE_BOMB") {
-      commit("revealTile", tile);
-      // Lose game
+      dispatch("loseGame", tile);
       return;
     }
     if (tile.type === "TYPE_NUMBER") {
@@ -53,6 +56,14 @@ export const actions = {
   toggleFlag({ commit }: AppContext, tile: Tile) {
     if (tile.revealed) return;
     commit("setTileFlag", { tile, flag: !tile.flag });
+  },
+  loseGame({ commit, state }: AppContext, tile: Tile) {
+    if (tile.type !== 'TYPE_BOMB') return;
+    forEachTile(state.board.tiles, t => {
+      commit("revealTile", t);
+    });
+    // TODO: mark `tile` as loseGame
+    // TODO: score
   }
 };
 

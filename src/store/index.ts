@@ -14,11 +14,11 @@ const defaultState: AppState = {
   // Initially the board has no bombs. They will be set
   // after the field is set dirty so that the first tile
   // is never the bomb
-  board: createBoard(5, 5, 0),
+  board: createBoard(8, 15, 20),
   lose: false,
-  selectedBombs: 8,
-  selectedHTiles: 15,
-  selectedVTiles: 20,
+  selectedHTiles: 8,
+  selectedVTiles: 15,
+  selectedBombs: 20,
   isPristine: true
 };
 

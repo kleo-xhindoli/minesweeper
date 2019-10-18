@@ -13,6 +13,7 @@ const mockTiles = [
   [
     {
       id: "0,0",
+      position: { x: 0, y: 0 },
       revealed: false,
       flag: false,
       type: "TYPE_NUMBER",
@@ -21,6 +22,7 @@ const mockTiles = [
     },
     {
       id: "0,1",
+      position: { x: 0, y: 1 },
       revealed: false,
       flag: false,
       type: "TYPE_NUMBER",
@@ -29,6 +31,7 @@ const mockTiles = [
     },
     {
       id: "0,2",
+      position: { x: 0, y: 2 },
       revealed: false,
       flag: false,
       type: "TYPE_BLANK",
@@ -38,6 +41,7 @@ const mockTiles = [
   [
     {
       id: "1,0",
+      position: { x: 1, y: 0 },
       revealed: false,
       flag: false,
       type: "TYPE_BOMB",
@@ -45,6 +49,7 @@ const mockTiles = [
     },
     {
       id: "1,1",
+      position: { x: 1, y: 1 },
       revealed: false,
       flag: false,
       type: "TYPE_NUMBER",
@@ -53,6 +58,7 @@ const mockTiles = [
     },
     {
       id: "1,2",
+      position: { x: 1, y: 2 },
       revealed: false,
       flag: false,
       type: "TYPE_BLANK",
@@ -62,6 +68,7 @@ const mockTiles = [
   [
     {
       id: "2,0",
+      position: { x: 2, y: 0 },
       revealed: false,
       flag: false,
       type: "TYPE_NUMBER",
@@ -70,6 +77,7 @@ const mockTiles = [
     },
     {
       id: "2,1",
+      position: { x: 2, y: 1 },
       revealed: false,
       flag: false,
       type: "TYPE_NUMBER",
@@ -78,6 +86,7 @@ const mockTiles = [
     },
     {
       id: "2,2",
+      position: { x: 2, y: 2 },
       revealed: false,
       flag: false,
       type: "TYPE_BLANK",
@@ -235,12 +244,11 @@ describe("unit | Service | GameService", () => {
   describe("forEachTile", () => {
     it(`calls the function for each tile with the correct tile 
       object and position`, () => {
-      const mockCb = jest.fn((tile, pos) => null);
+      const mockCb = jest.fn(tile => null);
       forEachTile(mockBoard, mockCb);
       expect(mockCb.mock.calls.length).toBe(9);
       for (let i = 0; i < 9; i++) {
         expect(mockCb.mock.calls[i][0]).toHaveProperty("type");
-        expect(mockCb.mock.calls[i][1]).toHaveProperty("x");
       }
     });
   });
@@ -290,19 +298,17 @@ describe("unit | Service | GameService", () => {
       });
 
       let bombs: Tile[] = [];
-      let bombPositions: Position[] = [];
-      forEachTile(board, (tile, pos) => {
+      forEachTile(board, tile => {
         if (tile.type === "TYPE_BOMB") {
           bombs.push(tile);
-          bombPositions.push(pos);
         }
       });
 
       expect(bombs.length).toBe(2);
 
-      forEachTile(board, (tile, pos) => {
+      forEachTile(board, tile => {
         if (tile.type === "TYPE_BLANK") {
-          const adj = getAdjacentTiles(board, pos);
+          const adj = getAdjacentTiles(board, tile.position);
           expect(adj.every(t => t.type !== "TYPE_BOMB")).toBe(true);
         }
       });

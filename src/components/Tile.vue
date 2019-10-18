@@ -9,8 +9,6 @@ import { Tile } from "@/types";
 @Component
 export default class TileComponent extends Vue {
   @Prop() private tile!: Tile;
-  @Prop() private x!: number;
-  @Prop() private y!: number;
 
   getDisplay(tile: Tile) {
     if (tile.type === "TYPE_BOMB") return "*";

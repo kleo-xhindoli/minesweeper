@@ -1,5 +1,7 @@
 export type TileType = "TYPE_BOMB" | "TYPE_NUMBER" | "TYPE_BLANK";
 
+export type Position = { x: number; y: number };
+
 export interface Tile {
   id: string;
   revealed: boolean;
@@ -7,6 +9,7 @@ export interface Tile {
   value?: number;
   flag: boolean;
   questionmark: boolean;
+  position: Position;
 }
 
 export interface Board {
@@ -15,5 +18,3 @@ export interface Board {
   bombs: number;
   tiles: Tile[][];
 }
-
-export type Position = { x: number; y: number };

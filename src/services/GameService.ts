@@ -7,12 +7,12 @@ import { Board, Position, Tile } from "../types";
 
 export function forEachTile(
   board: Board,
-  fn: (tile: Tile, pos: Position) => any
+  fn: (tile: Tile) => any
 ) {
   for (let x = 0; x < board.vTiles; x++) {
     for (let y = 0; y < board.hTiles; y++) {
       const tile = { ...board.tiles[x][y] }; // clone the tile
-      fn(tile, { x, y });
+      fn(tile);
     }
   }
 }
@@ -89,7 +89,8 @@ export function createTile(
     revealed: false,
     flag: false,
     type: "TYPE_BLANK",
-    questionmark: false
+    questionmark: false,
+    position
   };
 
   if (checkBomb(position)) {

@@ -1,8 +1,8 @@
 <template>
   <div class="board-grid">
-    <div class="board-col" v-for="(col, x) in board.tiles" :key="x">
-      <div class="board-tile" v-for="(tile, y) in col" :key="y">
-        <Tile :x="x" :y="y" :tile="tile" />
+    <div class="board-col" v-for="(col, gridX) in board.tiles" :key="gridX">
+      <div class="board-tile" v-for="(tile, gridY) in col" :key="gridY">
+        <Tile :tile="tile" />
       </div>
     </div>
   </div>

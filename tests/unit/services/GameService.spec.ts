@@ -245,7 +245,7 @@ describe("unit | Service | GameService", () => {
     it(`calls the function for each tile with the correct tile 
       object and position`, () => {
       const mockCb = jest.fn(tile => null);
-      forEachTile(mockBoard, mockCb);
+      forEachTile(mockBoard.tiles, mockCb);
       expect(mockCb.mock.calls.length).toBe(9);
       for (let i = 0; i < 9; i++) {
         expect(mockCb.mock.calls[i][0]).toHaveProperty("type");
@@ -298,7 +298,7 @@ describe("unit | Service | GameService", () => {
       });
 
       let bombs: Tile[] = [];
-      forEachTile(board, tile => {
+      forEachTile(board.tiles, tile => {
         if (tile.type === "TYPE_BOMB") {
           bombs.push(tile);
         }
@@ -306,7 +306,7 @@ describe("unit | Service | GameService", () => {
 
       expect(bombs.length).toBe(2);
 
-      forEachTile(board, tile => {
+      forEachTile(board.tiles, tile => {
         if (tile.type === "TYPE_BLANK") {
           const adj = getAdjacentTiles(board, tile.position);
           expect(adj.every(t => t.type !== "TYPE_BOMB")).toBe(true);

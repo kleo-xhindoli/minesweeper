@@ -1,5 +1,10 @@
 <template>
-  <div class="tile">{{ getDisplay(tile) }}</div>
+  <div
+    class="tile"
+    @click="handleClick"
+    @contextmenu="handleRightClick"
+    :class="{ revealed: this.tile.revealed, flag: this.tile.flag }"
+  >{{ display }}</div>
 </template>
 
 <script lang="ts">
@@ -10,10 +15,26 @@ import { Tile } from "@/types";
 export default class TileComponent extends Vue {
   @Prop() private tile!: Tile;
 
-  getDisplay(tile: Tile) {
-    if (tile.type === "TYPE_BOMB") return "*";
-    if (tile.type === "TYPE_NUMBER") return tile.value;
+  get display() {
+    if (this.tile.flag) return "F";
+    if (!this.tile.revealed) return " ";
+    if (this.tile.type === "TYPE_BOMB") return "*";
+    if (this.tile.type === "TYPE_NUMBER") return this.tile.value;
     return " ";
+  }
+
+  handleClick() {
+    if (this.tile.flag) return;
+    if (this.tile.revealed && this.tile.type === "TYPE_NUMBER") {
+      this.$store.dispatch("revealAdjacent", this.tile);
+    }
+    this.$store.dispatch("reveal", this.tile);
+  }
+
+  handleRightClick(e: Event) {
+    e.preventDefault();
+    if (this.tile.revealed) return;
+    this.$store.dispatch("toggleFlag", this.tile);
   }
 }
 </script>
@@ -27,5 +48,16 @@ export default class TileComponent extends Vue {
   line-height: 80px;
   text-align: center;
   font-family: monospace;
+  cursor: pointer;
+  background: lightgrey;
+  user-select: none;
+
+  &.revealed {
+    background: white;
+  }
+
+  &.flag {
+    color: darkred;
+  }
 }
 </style>

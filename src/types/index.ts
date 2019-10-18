@@ -18,3 +18,7 @@ export interface Board {
   bombs: number;
   tiles: Tile[][];
 }
+
+export interface AppState {
+  board: Board;
+}

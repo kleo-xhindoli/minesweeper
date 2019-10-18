@@ -3,7 +3,7 @@
     <div class="box">
       <div class="item score">{{ score }}</div>
       <div class="item btn">
-        <div class="button">RST</div>
+        <div class="button" @click="resetGame">RST</div>
       </div>
       <div class="item time">{{ time }}</div>
     </div>
@@ -11,12 +11,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Emit, Vue } from "vue-property-decorator";
 
 @Component
 export default class Heder extends Vue {
   @Prop() private score!: number;
   @Prop() private time!: number;
+
+  @Emit()
+  resetGame() {
+    console.log('msg')
+  }
 }
 </script>
 

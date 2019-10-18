@@ -55,19 +55,23 @@ export function getAdjacentTiles(board: Board, position: Position): Tile[] {
 export function generateBombPositions(
   hTiles: number,
   vTiles: number,
-  bombs: number
+  bombs: number,
+  excludePositions: Position[] = []
 ): Position[] {
-  if (bombs > hTiles * vTiles) {
+  if (bombs > hTiles * vTiles - excludePositions.length) {
     throw new Error("Cannot have more bombs than tiles");
   }
   let positions: Position[] = [];
+  const isUniqPos = (x: number, y: number) =>
+    !positions.concat(excludePositions).some(p => p.x === x && p.y === y);
   while (positions.length < bombs) {
     const x = random(0, vTiles - 1);
     const y = random(0, hTiles - 1);
-    if (!positions.some(p => p.x === x && p.y === y)) {
+    if (isUniqPos(x, y)) {
       positions.push({ x, y });
     }
   }
+
   return positions;
 }
 
@@ -123,9 +127,15 @@ export function createTile(
 export function createBoard(
   hTiles: number,
   vTiles: number,
-  bombs: number
+  bombs: number,
+  excludePositions: Position[] = []
 ): Board {
-  const bombPositions = generateBombPositions(hTiles, vTiles, bombs);
+  const bombPositions = generateBombPositions(
+    hTiles,
+    vTiles,
+    bombs,
+    excludePositions
+  );
 
   let tiles: Tile[][] = [];
 

@@ -140,6 +140,27 @@ describe("unit | Service | GameService", () => {
         expect(uniq(stringPos).length).toBe(positions.length);
       }
     });
+
+    it("does not generate a bomb in the exclude positions if any are provided", () => {
+      const ATTEMPTS = 10;
+      const excludePositions = [{ x: 0, y: 0 }];
+      for (let i = 0; i < ATTEMPTS; i++) {
+        const positions = generateBombPositions(2, 3, 5, excludePositions);
+
+        expect(
+          positions.some(
+            p => p.x === excludePositions[0].x && p.y === excludePositions[0].y
+          )
+        ).toBe(false);
+      }
+    });
+
+    it("throws an error if bombs > total tiles - number of excluded positions", () => {
+      const excludePositions = [{ x: 0, y: 0 }, { x: 1, y: 1 }];
+      expect(() => {
+        generateBombPositions(2, 3, 5, excludePositions);
+      }).toThrow();
+    });
   });
 
   describe("createTile", () => {

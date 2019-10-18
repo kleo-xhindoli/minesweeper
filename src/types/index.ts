@@ -24,6 +24,10 @@ export interface Board {
 export interface AppState {
   board: Board;
   lose: boolean;
+  selectedBombs: number;
+  selectedHTiles: number;
+  selectedVTiles: number;
+  isPristine: boolean;
 }
 
 export type AppContext = ActionContext<AppState, AppState>;

@@ -5,13 +5,21 @@ import {
   getAdjacentTiles,
   forEachTile
 } from "@/services/GameService";
-import { Tile, AppState, AppContext } from "@/types";
+import { Tile, AppState, AppContext, Board } from "@/types";
+import { board } from "tests/unit/store/test-data/state";
 
 Vue.use(Vuex);
 
 const defaultState: AppState = {
-  board: createBoard(5, 5, 4),
-  lose: false
+  // Initially the board has no bombs. They will be set
+  // after the field is set dirty so that the first tile
+  // is never the bomb
+  board: createBoard(5, 5, 0),
+  lose: false,
+  selectedBombs: 8,
+  selectedHTiles: 15,
+  selectedVTiles: 20,
+  isPristine: true
 };
 
 export const mutations = {
@@ -27,6 +35,22 @@ export const mutations = {
     // Lose could be `computed` but it's easer to trigger
     // it after a bomb has been revealed
     Vue.set(state, "lose", set);
+  },
+  setSelectedBombs(state: AppState, bombs: number) {
+    Vue.set(state, "selectedBombs", bombs);
+  },
+  setSelectedDimensions(
+    state: AppState,
+    { hTiles, vTiles }: { hTiles: number; vTiles: number }
+  ) {
+    Vue.set(state, "selectedHTiles", hTiles);
+    Vue.set(state, "selectedVTiles", vTiles);
+  },
+  setPristine(state: AppState, pristine: boolean) {
+    Vue.set(state, "isPristine", pristine);
+  },
+  setBoard(state: AppState, board: Board) {
+    Vue.set(state, "board", board);
   }
 };
 
@@ -67,6 +91,30 @@ export const actions = {
     if (tile.revealed) return;
     commit("setTileFlag", { tile, flag: !tile.flag });
   },
+  initialReveal({ commit, dispatch, state }: AppContext, tile: Tile) {
+    const { selectedBombs, selectedHTiles, selectedVTiles } = state;
+    const newBoard = createBoard(
+      selectedHTiles,
+      selectedVTiles,
+      selectedBombs,
+      [tile.position]
+    );
+    commit("setBoard", newBoard);
+    commit("setPristine", false);
+    const newTile = state.board.tiles[tile.position.x][tile.position.y];
+    dispatch("reveal", newTile);
+  },
+  newGame(
+    { commit, state }: AppContext,
+    { hTiles, vTiles, bombs }: { hTiles: number; vTiles: number; bombs: number }
+  ) {
+    commit("setSelectedDimensions", { hTiles, vTiles });
+    commit("setSelectedBombs", bombs);
+    const pristineBoard = createBoard(hTiles, vTiles, bombs);
+    commit("setBoard", pristineBoard);
+    commit("setLose", false);
+    commit("setPristine", true);
+  },
   loseGame({ commit, state }: AppContext, tile: Tile) {
     if (tile.type !== "TYPE_BOMB") return;
     forEachTile(state.board.tiles, t => {
@@ -97,7 +145,10 @@ export const getters = {
     return state.board.vTiles * state.board.hTiles;
   },
   remainingBlanks: (state: AppState, getters: any) => {
-    return getters.totalTiles - state.board.bombs - getters.totalRevealed;
+    return getters.totalTiles - state.selectedBombs - getters.totalRevealed;
+  },
+  remainingBombs: (state: AppState, getters: any) => {
+    return state.selectedBombs - getters.totalFlags;
   },
   win: (state: AppState, getters: any) => {
     return getters.remainingBlanks === 0;

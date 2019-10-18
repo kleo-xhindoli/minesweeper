@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Header :score="score" :time="timer" />
+    <Header :score="score" :time="timer" @reset-game="resetGame" />
     <div class="main">
       <Board :board="board" />
     </div>
@@ -26,7 +26,7 @@ export default {
       return this.$store.state.board;
     },
     score() {
-      return this.$store.state.board.bombs - this.$store.getters.totalFlags;
+      return this.$store.getters.remainingBombs;
     },
     isGameOver() {
       return this.$store.state.lose || this.$store.getters.win;
@@ -38,6 +38,16 @@ export default {
   components: {
     Board,
     Header
+  },
+  methods: {
+    resetGame() {
+      this.$store.dispatch("newGame", {
+        hTiles: 8,
+        vTiles: 15,
+        bombs: 20
+      });
+      this.timer = 0;
+    }
   },
   mounted() {
     this.intervalId = setInterval(() => {

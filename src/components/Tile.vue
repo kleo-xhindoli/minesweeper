@@ -28,7 +28,9 @@ export default class TileComponent extends Vue {
     if (this.tile.revealed && this.tile.type === "TYPE_NUMBER") {
       this.$store.dispatch("revealAdjacent", this.tile);
     }
-    this.$store.dispatch("reveal", this.tile);
+    this.$store.state.isPristine
+      ? this.$store.dispatch("initialReveal", this.tile)
+      : this.$store.dispatch("reveal", this.tile);
   }
 
   handleRightClick(e: Event) {

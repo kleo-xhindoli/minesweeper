@@ -7,15 +7,19 @@ import { getAdjacentTiles } from "@/services/GameService";
 describe("Unit | Store | Actions", () => {
   let state: AppState = {
     board: cloneDeep(board),
-    lose: false
+    lose: false,
+    selectedHTiles: 5,
+    selectedVTiles: 5,
+    selectedBombs: 4,
+    isPristine: true
   };
   let dispatch = jest.fn();
   let commit = jest.fn();
   const context = { dispatch, commit, state } as any;
   beforeEach(() => {
     state = {
-      board: cloneDeep(board),
-      lose: false
+      ...state,
+      board: cloneDeep(board)
     };
 
     const getters = {

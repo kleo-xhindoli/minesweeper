@@ -1,3 +1,5 @@
+import { ActionContext } from "vuex";
+
 export type TileType = "TYPE_BOMB" | "TYPE_NUMBER" | "TYPE_BLANK";
 
 export type Position = { x: number; y: number };
@@ -22,3 +24,5 @@ export interface Board {
 export interface AppState {
   board: Board;
 }
+
+export type AppContext = ActionContext<AppState, AppState>;

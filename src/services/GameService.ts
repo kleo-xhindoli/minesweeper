@@ -5,10 +5,7 @@ import { Board, Position, Tile } from "../types";
 
 // Helper Functions ==========================================================
 
-export function forEachTile(
-  board: Board,
-  fn: (tile: Tile) => any
-) {
+export function forEachTile(board: Board, fn: (tile: Tile) => any) {
   for (let x = 0; x < board.vTiles; x++) {
     for (let y = 0; y < board.hTiles; y++) {
       const tile = { ...board.tiles[x][y] }; // clone the tile

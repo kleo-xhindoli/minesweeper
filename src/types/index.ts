@@ -23,6 +23,7 @@ export interface Board {
 
 export interface AppState {
   board: Board;
+  lose: boolean;
 }
 
 export type AppContext = ActionContext<AppState, AppState>;

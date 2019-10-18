@@ -2,20 +2,31 @@ import { actions } from "@/store";
 import { board } from "./test-data/state";
 import { AppState } from "@/types";
 import { cloneDeep } from "lodash";
-import { getAdjacentTiles, forEachTile } from "@/services/GameService";
+import { getAdjacentTiles } from "@/services/GameService";
 
 describe("Unit | Store | Actions", () => {
   let state: AppState = {
-    board: cloneDeep(board)
+    board: cloneDeep(board),
+    lose: false
   };
   let dispatch = jest.fn();
   let commit = jest.fn();
   const context = { dispatch, commit, state } as any;
   beforeEach(() => {
     state = {
-      board: cloneDeep(board)
+      board: cloneDeep(board),
+      lose: false
     };
+
+    const getters = {
+      totalRevealed: 0,
+      totalFlags: 0,
+      totalTiles: 25,
+      remainingBlanks: 21
+    };
+
     context.state = state;
+    context.getters = getters;
     dispatch.mockClear();
     commit.mockClear();
   });
@@ -173,19 +184,26 @@ describe("Unit | Store | Actions", () => {
   describe("loseGame", () => {
     it("will not commit/dispatch if the tile isnt a bomb", () => {
       const tile = state.board.tiles[2][1];
-      expect(tile.type === 'TYPE_BOMB').toBe(false)
+      expect(tile.type === "TYPE_BOMB").toBe(false);
 
       actions.loseGame(context, tile);
       expect(commit.mock.calls.length).toBe(0);
       expect(dispatch.mock.calls.length).toBe(0);
-    })
+    });
     it("will commit revealTile on all the tiles", () => {
       const tile = state.board.tiles[2][2];
-      expect(tile.type === 'TYPE_BOMB').toBe(true)
+      expect(tile.type === "TYPE_BOMB").toBe(true);
 
       actions.loseGame(context, tile);
-      expect(commit.mock.calls.length).toBe(state.board.vTiles * state.board.hTiles);
+
+      expect(commit.mock.calls.length).toBe(
+        state.board.vTiles * state.board.hTiles + 1
+      );
+      expect(commit.mock.calls[0][0]).toBe("revealTile");
+      expect(commit.mock.calls[commit.mock.calls.length - 1][0]).toBe(
+        "setLose"
+      );
       expect(dispatch.mock.calls.length).toBe(0);
-    })
-  })
+    });
+  });
 });

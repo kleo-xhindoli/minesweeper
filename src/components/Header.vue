@@ -19,9 +19,7 @@ export default class Heder extends Vue {
   @Prop() private time!: number;
 
   @Emit()
-  resetGame() {
-    console.log('msg')
-  }
+  resetGame() {}
 }
 </script>
 

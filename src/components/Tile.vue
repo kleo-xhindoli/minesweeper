@@ -4,7 +4,9 @@
     @click="handleClick"
     @contextmenu="handleRightClick"
     :class="{ revealed: this.tile.revealed, flag: this.tile.flag }"
-  >{{ display }}</div>
+  >
+    {{ display }}
+  </div>
 </template>
 
 <script lang="ts">
